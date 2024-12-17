@@ -18,10 +18,14 @@ export default function LoginDashboard() {
 
   return (
     <div className="min-h-screen bg-custom-beige flex flex-col">
-      <LoginHeader toggleCard={toggleCard} card={card} />
-      {card === "login" && <LoginCard />}
-      {card === "signup" && <SignupCard />}
-      {card === "aboutus" && <AboutCard />}
+      <div className="p-3">
+        <LoginHeader toggleCard={toggleCard} card={card} />
+      </div>
+      <div className="p-3">
+        {card === "login" && <LoginCard />}
+        {card === "signup" && <SignupCard />}
+        {card === "aboutus" && <AboutCard />}
+      </div>
     </div>
   );
 }
