@@ -21,7 +21,7 @@ export default function LoginDashboard() {
       <div className="p-3">
         <LoginHeader toggleCard={toggleCard} card={card} />
       </div>
-      <div className="p-3">
+      <div className="flex-1 flex items-center justify-center p-3">
         {card === "login" && <LoginCard />}
         {card === "signup" && <SignupCard />}
         {card === "aboutus" && <AboutCard />}
