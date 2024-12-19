@@ -43,6 +43,14 @@ export default function LoginHeader({ toggleCard, card }: LoginHeaderProps) {
         <a onClick={() => toggleCard("login")} className={linkClasses("login")}>
           Login
         </a>
+        <a
+          href="https://github.com/Josedzzz/joki-hair-salon-front"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClasses("github")}
+        >
+          <i className="fa-brands fa-github text-custom-black"></i>
+        </a>
       </nav>
     </header>
   );
