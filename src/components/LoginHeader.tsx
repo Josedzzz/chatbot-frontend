@@ -18,7 +18,7 @@ export default function LoginHeader({ toggleCard, card }: LoginHeaderProps) {
     }`;
 
   return (
-    <header className="h-16 w-full rounded-xl bg-custom-white border-4 border-custom-black flex justify-between items-center p-2 sm:px-14">
+    <header className="h-16 w-full rounded-xl bg-custom-white border-4 border-custom-black flex justify-between items-center p-2 sm:px-14 animate-slideIn">
       <div className="flex items-center space-x-1 gap-3">
         <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-custom-black">
           Joki Chat
