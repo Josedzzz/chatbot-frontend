@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginService } from "../services/authService";
+import Cookies from "js-cookie";
 
 export default function LoginCard() {
   const navigate = useNavigate();
@@ -8,6 +10,49 @@ export default function LoginCard() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Validates the email and password
+   * @returns null if is good, otherwise return a message
+   */
+  const validateForm = (): string | null => {
+    if (!/\S+@\S+\.\S+/.test(email)) return "Email is not valid";
+    if (password.length < 6)
+      return "Password must be at least 6 characters long";
+    return null;
+  };
+
+  /**
+   * Handles the submission for the login event
+   * @param e the form submission event
+   */
+  const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setMessage("");
+    setIsLoading(false);
+    try {
+      const validationMessage = validateForm();
+      if (validationMessage) {
+        setMessage(validationMessage);
+        return;
+      }
+      const response = await loginService({ email, password });
+      if (response.success) {
+        setMessage(response.message);
+        localStorage.setItem("userId", response.data.user._id);
+        Cookies.set("authToken", response.data.token, { expires: 1 });
+        navigate("/user-dashboard");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("An unexpected error ocurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className="flex items-center justify-center w-full">
       <div className="w-full max-w-xl bg-custom-white p-8 border-4 border-custom-black rounded-xl animate-fadeInScale">
@@ -15,7 +60,7 @@ export default function LoginCard() {
           <h1 className="text-xl font-bold text-custom-black">Login</h1>
           <i className="fa-solid fa-arrow-right-to-bracket text-xl text-custom-black"></i>
         </div>
-        <form>
+        <form onSubmit={handleLoginSubmit}>
           <div className="mb-5">
             <label
               className="block text-custom-black font-bold mb-3"
