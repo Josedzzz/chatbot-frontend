@@ -1,13 +1,57 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signupService } from "../services/authService";
 
 export default function SignupCard() {
   const navigate = useNavigate();
-  const [userName, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  /**
+   * Validates the username, email and password
+   * @returns null if is good, otherwise return a message
+   */
+  const validateForm = (): string | null => {
+    if (username.length < 3)
+      return "Username must be at least 6 characters long";
+    if (!/\S+@\S+\.\S+/.test(email)) return "Email is not valid";
+    if (password.length < 6)
+      return "Password must be at least 6 characters long";
+    return null;
+  };
+
+  /**
+   * Handles the submission for the signup event
+   * @param e the form submission event
+   */
+  const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setMessage("");
+    setIsLoading(true);
+    try {
+      const validationMessage = validateForm();
+      if (validationMessage) {
+        setMessage(validationMessage);
+        return;
+      }
+      const response = await signupService({ email, username, password });
+      if (response.success) {
+        setMessage(response.message);
+        navigate("/login");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("An unexpected error ocurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="flex items-center justify-center w-full">
@@ -16,7 +60,7 @@ export default function SignupCard() {
           <h1 className="text-xl font-bold text-custom-black">Sign up</h1>
           <i className="fa-solid fa-arrow-right-to-bracket text-xl text-custom-black"></i>
         </div>
-        <form>
+        <form onSubmit={handleSignupSubmit}>
           <div className="mb-5">
             <label
               className="block text-custom-black font-bold mb-3"
@@ -29,7 +73,7 @@ export default function SignupCard() {
               id="username"
               className="text-custom-black w-full px-2 py-1 rounded-lg ring-2 ring-custom-black focus:outline-none focus:ring-4 focus:ring-custom-black text-sm"
               placeholder="Enter your username"
-              value={userName}
+              value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
