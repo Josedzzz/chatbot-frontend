@@ -5,7 +5,7 @@ interface ChatCredentials {
   prompt: string;
 }
 
-interface ChatHistoryData {
+export interface ChatHistoryData {
   _id: string;
   userId: string;
   title: string;
@@ -13,7 +13,7 @@ interface ChatHistoryData {
   __v: number;
 }
 
-interface Message {
+export interface Message {
   sender: "user" | "bot";
   message: string;
   timestamp: string;
