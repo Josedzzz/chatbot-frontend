@@ -65,7 +65,7 @@ export default function UserDashboard() {
 
   useEffect(() => {
     loadChatHistory();
-  });
+  }, []);
 
   return (
     <div className="min-h-screen bg-custom-beige flex flex-col">
