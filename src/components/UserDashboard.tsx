@@ -6,11 +6,7 @@ import {
 } from "../services/chatService";
 import UserHeader from "./UserHeader";
 
-interface UserDashboardProps {
-  userId: string;
-}
-
-export default function UserDashboard({ userId }: UserDashboardProps) {
+export default function UserDashboard() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +19,10 @@ export default function UserDashboard({ userId }: UserDashboardProps) {
     try {
       setIsLoading(true);
       setError(null);
+      const userId = localStorage.getItem("userId");
+      if (userId == null) {
+        return;
+      }
       const response = await loadChatHistoryService(userId);
       if (response.success) {
         setChatHistory(response.data);
@@ -45,6 +45,10 @@ export default function UserDashboard({ userId }: UserDashboardProps) {
     try {
       setIsLoading(true);
       setError(null);
+      const userId = localStorage.getItem("userId");
+      if (userId == null) {
+        return;
+      }
       const response = await chatService({ userId, prompt: newMessage });
       if (response.success) {
         setNewMessage("");
@@ -68,6 +72,67 @@ export default function UserDashboard({ userId }: UserDashboardProps) {
       <div className="p-3">
         <UserHeader title={chatHistory?.title || "Loading chat..."} />
       </div>
+
+      {/* Chat messages */}
+      <div className="flex-1 overflow-y-auto p-4">
+        {isLoading ? (
+          <i className="fa fa-spinner fa-spin"></i>
+        ) : error ? (
+          <p className="text-center text-red-400">{error}</p>
+        ) : chatHistory?.messages.length ? (
+          chatHistory.messages.map((message) => (
+            <div
+              key={message._id}
+              className={`flex mb-4 ${
+                message.sender === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-md p-3 rounded-lg shadow`}
+                style={{
+                  backgroundColor:
+                    message.sender === "user" ? "#F0F0F0" : "#0F0F0F",
+                  color: message.sender === "user" ? "#0F0F0F" : "#F0F0F0",
+                }}
+              >
+                <p>{message.message}</p>
+                <small className="text-sm block mt-2 opacity-70">
+                  {new Date(message.timestamp).toLocaleString()}
+                </small>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-custom-black">No messages yet</p>
+        )}
+      </div>
+
+      {/* Input section */}
+      <footer className="w-full p-4 flex items-center bg-[#F0F0F0]">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type your message..."
+          className="flex-1 p-3 rounded-lg border shadow"
+          style={{
+            backgroundColor: "#FFF3E3",
+            color: "#0F0F0F",
+          }}
+        />
+        <button
+          onClick={sendMessage}
+          disabled={isLoading || !newMessage.trim()}
+          className="ml-4 px-6 py-3 rounded-lg shadow font-bold"
+          style={{
+            backgroundColor: isLoading ? "#CCCCCC" : "#0F0F0F",
+            color: "#F0F0F0",
+            cursor: isLoading ? "not-allowed" : "pointer",
+          }}
+        >
+          {isLoading ? "Sending..." : "Send"}
+        </button>
+      </footer>
     </div>
   );
 }
