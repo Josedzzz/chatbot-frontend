@@ -108,7 +108,7 @@ export default function UserDashboard() {
       </div>
 
       {/* Input section */}
-      <footer className="w-full p-4 flex items-center bg-[#F0F0F0]">
+      <footer className="w-full p-4 flex items-center bg-[#F0F0F0] fixed bottom-0">
         <input
           type="text"
           value={newMessage}
