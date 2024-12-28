@@ -44,7 +44,7 @@ export default function LoginHeader({ toggleCard, card }: LoginHeaderProps) {
           Login
         </a>
         <a
-          href="https://github.com/Josedzzz/joki-hair-salon-front"
+          href="https://github.com/Josedzzz/chatbot-frontend"
           target="_blank"
           rel="noopener noreferrer"
           className={linkClasses("github")}
