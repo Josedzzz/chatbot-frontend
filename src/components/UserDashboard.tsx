@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import {
   ChatHistoryData,
-  chatService,
   loadChatHistoryService,
 } from "../services/chatService";
 import UserHeader from "./UserHeader";
+import UserFooter from "./UserFooter";
 
 export default function UserDashboard() {
   const [chatHistory, setChatHistory] = useState<ChatHistoryData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [newMessage, setNewMessage] = useState<string>("");
 
   /**
    * Gets the user's chat history
@@ -36,45 +35,18 @@ export default function UserDashboard() {
     }
   };
 
-  /**
-   * Send a message and load the chat again
-   * @returns
-   */
-  const sendMessage = async () => {
-    if (newMessage.trim()) return;
-    try {
-      setIsLoading(true);
-      setError(null);
-      const userId = localStorage.getItem("userId");
-      if (userId == null) {
-        return;
-      }
-      const response = await chatService({ userId, prompt: newMessage });
-      if (response.success) {
-        setNewMessage("");
-        await loadChatHistory();
-      } else {
-        setError(response.error.message || "Failed to send the message");
-      }
-    } catch (error) {
-      setError((error as Error).message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     loadChatHistory();
   }, []);
 
   return (
     <div className="min-h-screen bg-custom-beige flex flex-col">
-      <div className="p-3">
+      <div className="p-3 fixed top-0 w-full z-10">
         <UserHeader title={chatHistory?.title || "Loading chat..."} />
       </div>
 
       {/* Chat messages */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 mt-16 mb-16 overflow-y-auto p-4">
         {isLoading ? (
           <i className="fa fa-spinner fa-spin"></i>
         ) : error ? (
@@ -108,31 +80,9 @@ export default function UserDashboard() {
       </div>
 
       {/* Input section */}
-      <footer className="w-full p-4 flex items-center bg-[#F0F0F0] fixed bottom-0">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message..."
-          className="flex-1 p-3 rounded-lg border shadow"
-          style={{
-            backgroundColor: "#FFF3E3",
-            color: "#0F0F0F",
-          }}
-        />
-        <button
-          onClick={sendMessage}
-          disabled={isLoading || !newMessage.trim()}
-          className="ml-4 px-6 py-3 rounded-lg shadow font-bold"
-          style={{
-            backgroundColor: isLoading ? "#CCCCCC" : "#0F0F0F",
-            color: "#F0F0F0",
-            cursor: isLoading ? "not-allowed" : "pointer",
-          }}
-        >
-          {isLoading ? "Sending..." : "Send"}
-        </button>
-      </footer>
+      <div className="fixed bottom-0 w-full">
+        <UserFooter />
+      </div>
     </div>
   );
 }
