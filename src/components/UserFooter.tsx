@@ -40,6 +40,11 @@ export default function UserFooter({ reloadChatHistory }: UserFooterProps) {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !isLoading && message.trim()) {
+            sendMessage();
+          }
+        }}
         placeholder="Type your message..."
         className="flex-1 p-2 rounded-lg border-4 border-custom-black bg-custom-white focus:outline-none focus:ring-0"
       />
