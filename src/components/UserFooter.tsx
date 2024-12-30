@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { chatService } from "../services/chatService";
 
-export default function UserFooter() {
+interface UserFooterProps {
+  reloadChatHistory: () => Promise<void>;
+}
+
+export default function UserFooter({ reloadChatHistory }: UserFooterProps) {
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -19,6 +23,7 @@ export default function UserFooter() {
       const response = await chatService({ userId, prompt: message });
       if (response.success) {
         setMessage("");
+        await reloadChatHistory();
       } else {
         console.log(response.error.message);
       }

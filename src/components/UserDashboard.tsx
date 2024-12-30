@@ -38,6 +38,16 @@ export default function UserDashboard() {
     }
   };
 
+  /**
+   * Reload the chat history and move to the last message
+   */
+  const reloadChatHistory = async () => {
+    await loadChatHistory();
+    if (botref.current) {
+      botref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     loadChatHistory();
   }, []);
@@ -94,7 +104,7 @@ export default function UserDashboard() {
 
       {/* Input section */}
       <div className="fixed bottom-0 w-full">
-        <UserFooter />
+        <UserFooter reloadChatHistory={reloadChatHistory} />
       </div>
     </div>
   );
