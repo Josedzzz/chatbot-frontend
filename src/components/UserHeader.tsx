@@ -15,12 +15,18 @@ export default function UserHeader({ title }: UserHeaderProps) {
         </h1>
         <i className="fa-solid fa-robot text-xl sm:text-3xl md:text-4xl text-custom-black"></i>
       </div>
-      <div className="flex items-center gap-3 hover:scale-110 transition duration-300 ease-in-out">
-        <h2 className="text-xl font-bold text-custom-black">Log out</h2>
-        <i
+      <div className="flex gap-6">
+        <div className="flex items-center gap-2 hover:scale-110 transition duration-300 ease-in-out">
+          <h2 className="text-xl font-bold text-custom-black">Delete chat</h2>
+          <i className="fa-solid fa-trash text-lg"></i>
+        </div>
+        <div
+          className="flex items-center gap-2 hover:scale-110 transition duration-300 ease-in-out"
           onClick={() => navigate("/login")}
-          className="fa-solid fa-arrow-right-from-bracket text-xl "
-        ></i>
+        >
+          <h2 className="text-xl font-bold text-custom-black">Log out</h2>
+          <i className="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+        </div>
       </div>
     </header>
   );
