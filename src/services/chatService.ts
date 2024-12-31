@@ -105,3 +105,49 @@ export const loadChatHistoryService = async (
     throw error;
   }
 };
+
+/**
+ * Delete the chat history of an user
+ * @returns a promise ApiResponse that response with the message or throws an error
+ */
+export const deleteChatService = async (): Promise<ApiResponse<string>> => {
+  try {
+    const cookies = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="));
+    const authToken = cookies ? cookies.split("=")[1] : null;
+    if (!authToken) {
+      throw new Error("Authentication token not found");
+    }
+
+    const userId = localStorage.getItem("userId");
+    if (userId == null) {
+      throw new Error("user id not found");
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/chat/clearhistory/${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      },
+    );
+
+    const responseData: ApiResponse<string> = await response.json();
+    if (!response.ok || !responseData.success) {
+      const errorMessage =
+        responseData.success === false && responseData.error
+          ? responseData.error.message
+          : "An unexpected error ocurred";
+      throw new Error(errorMessage);
+    }
+
+    return responseData as ApiResponse<string>;
+  } catch (error) {
+    console.error("Error deleting the chat: ", error);
+    throw error;
+  }
+};
