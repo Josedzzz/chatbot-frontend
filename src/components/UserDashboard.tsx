@@ -61,7 +61,10 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-custom-beige flex flex-col">
       <div className="p-3 fixed top-0 w-full z-10">
-        <UserHeader title={chatHistory?.title || "Loading chat..."} />
+        <UserHeader
+          title={chatHistory?.title || "Loading chat..."}
+          reloadChatHistory={reloadChatHistory}
+        />
       </div>
 
       {/* Chat messages */}

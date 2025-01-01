@@ -1,11 +1,37 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { deleteChatService } from "../services/chatService";
 
 interface UserHeaderProps {
   title: string;
+  reloadChatHistory: () => Promise<void>;
 }
 
-export default function UserHeader({ title }: UserHeaderProps) {
+export default function UserHeader({
+  title,
+  reloadChatHistory,
+}: UserHeaderProps) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  /**
+   * Deletes the user chat
+   */
+  const deleteChat = async () => {
+    try {
+      setIsLoading(true);
+      const response = await deleteChatService();
+      if (response.success) {
+        await reloadChatHistory();
+      } else {
+        console.log(response.error.message);
+      }
+    } catch (error) {
+      console.error((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <header className="h-16 p-4 w-full rounded-xl bg-custom-white border-4 border-custom-black flex justify-between items-center">
@@ -16,7 +42,10 @@ export default function UserHeader({ title }: UserHeaderProps) {
         <i className="fa-solid fa-robot text-xl sm:text-3xl md:text-4xl text-custom-black"></i>
       </div>
       <div className="flex gap-6">
-        <div className="flex items-center gap-2 hover:scale-110 transition duration-300 ease-in-out">
+        <div
+          onClick={deleteChat}
+          className={`flex items-center gap-2 hover:scale-110 transition duration-300 ease-in-out ${isLoading ? "cursor-not-allowed" : ""}`}
+        >
           <h2 className="text-xl font-bold text-custom-black">Delete chat</h2>
           <i className="fa-solid fa-trash text-lg"></i>
         </div>
