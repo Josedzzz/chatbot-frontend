@@ -35,7 +35,7 @@ export default function UserFooter({ reloadChatHistory }: UserFooterProps) {
   };
 
   return (
-    <footer className="p-4 flex items-center bg-transparent">
+    <footer className="p-4 flex items-center bg-transparent animate-fadeInScale">
       <input
         type="text"
         value={message}

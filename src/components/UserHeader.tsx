@@ -34,7 +34,7 @@ export default function UserHeader({
   };
 
   return (
-    <header className="h-16 p-4 w-full rounded-xl bg-custom-white border-4 border-custom-black flex justify-between items-center">
+    <header className="h-16 p-4 w-full rounded-xl bg-custom-white border-4 border-custom-black flex justify-between items-center animate-slideIn">
       <div className="flex items-center space-x-1 gap-3">
         <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-custom-black">
           {title}
