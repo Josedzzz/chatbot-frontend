@@ -20,6 +20,8 @@ export interface Message {
   _id: string;
 }
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Handle the chat response procces by sending the user petition
  * @param credentials an object containing the userId and the prompt
@@ -37,7 +39,7 @@ export const chatService = async (
       throw new Error("Authentication token not found");
     }
 
-    const response = await fetch("http://localhost:3000/chat/message", {
+    const response = await fetch(`${apiUrl}/chat/message`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -79,16 +81,13 @@ export const loadChatHistoryService = async (
       throw new Error("Authentication token not found");
     }
 
-    const response = await fetch(
-      `http://localhost:3000/chat/history/${userId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
+    const response = await fetch(`${apiUrl}/chat/history/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-    );
+    });
 
     const responseData: ApiResponse<ChatHistoryData> = await response.json();
     if (!response.ok || !responseData.success) {
@@ -125,16 +124,13 @@ export const deleteChatService = async (): Promise<ApiResponse<string>> => {
       throw new Error("user id not found");
     }
 
-    const response = await fetch(
-      `http://localhost:3000/chat/clearhistory/${userId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
+    const response = await fetch(`${apiUrl}/chat/clearhistory/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-    );
+    });
 
     const responseData: ApiResponse<string> = await response.json();
     if (!response.ok || !responseData.success) {

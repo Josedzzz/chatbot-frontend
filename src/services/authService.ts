@@ -27,6 +27,8 @@ interface LoginResponseData {
   };
 }
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Handles the signup procces by sending credentials to the backend
  * @param credentials an object containing the username, email and password
@@ -36,7 +38,7 @@ export const signupService = async (
   credentials: SignupCredentials,
 ): Promise<ApiResponse<SignupResponseData>> => {
   try {
-    const response = await fetch("http://localhost:3000/auth/signup", {
+    const response = await fetch(`${apiUrl}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +71,7 @@ export const loginService = async (
   credentials: LoginCredentials,
 ): Promise<ApiResponse<LoginResponseData>> => {
   try {
-    const response = await fetch("http://localhost:3000/auth/login", {
+    const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
